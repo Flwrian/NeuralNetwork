@@ -1,7 +1,10 @@
-public class Main extends NeuralNetwork {
-    
-    public Main(int i, int h, int o) {
+import java.util.Scanner;
+
+public class Predict extends NeuralNetwork{
+
+    public Predict(int i, int h, int o) {
         super(i, h, o);
+        //TODO Auto-generated constructor stub
     }
 
     private boolean isCross(double[] input) {
@@ -99,22 +102,25 @@ public class Main extends NeuralNetwork {
         }
         return "Unknown";
     }
-
+    
     public static void main(String[] args) {
-        Main nn = new Main(9,20,10);
+        // load the model
+        Predict nn = new Predict(9, 20, 3);
+        NeuralNetwork.load("nn.ser");
+
+        // Let the user input a shape
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter a shape: ");
+        String input = scanner.nextLine();
+        scanner.close();
         
+        // Convert the input to a double array
+        double[] x = new double[input.length()];
+        for (int i = 0; i < input.length(); i++) {
+            x[i] = input.charAt(i) == '1' ? 1 : 0;
+        }
 
-        double[] x = {1,0,1,1,1,1,1,0,1};
-
-        nn.setLearningRate(1);
-
-        nn.setup();
-        nn.trainOnData(nn.getX(), nn.getY(), 1000000);
-
-        // Round the output to 3 decimal places
-        System.out.println(Math.round(nn.predict(x).get(0) * 1000.0) / 1000.0);
-        System.out.println(Math.round(nn.predict(x).get(1) * 1000.0) / 1000.0);
+        // Predict the shape
         System.out.println(nn.interpretation(x));
-        nn.save("nn.ser");
     }
 }
